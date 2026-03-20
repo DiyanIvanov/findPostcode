@@ -40,7 +40,7 @@ API keys are created through the web portal after registering for an account.
 
 ```bash
 curl -H "Authorization: Api-Key abc123xyz..." \
-  https://your-domain.com/api/postcode/M11AE/
+  https://your-domain.com/api/postcode/M1+1AE/
 ```
 
 Requests without a valid key will receive a `401 Unauthorized` response:
@@ -69,7 +69,7 @@ Returns the latitude and longitude for a given UK postcode.
 
 ```bash
 curl -H "Authorization: Api-Key abc123xyz..." \
-  https://your-domain.com/api/postcode/M11AE/
+  https://your-domain.com/api/postcode/M1+1AE/
 ```
 
 **Success Response** `200 OK`
@@ -86,8 +86,7 @@ curl -H "Authorization: Api-Key abc123xyz..." \
 
 ```json
 {
-  "error": "Postcode not found",
-  "postcode": "XX1 1XX"
+  "detail": "Postcode <postcode> not found"
 }
 ```
 
