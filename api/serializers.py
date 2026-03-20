@@ -6,4 +6,6 @@ from api.models import Postcode
 class PostcodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Postcode
-        fields = ('postcode', 'district', 'area', 'easting', 'northing', 'latitude', 'longitude')
+        fields = ('postcode', 'district', 'area', 'eastings', 'northings', 'latitude', 'longitude')
+
+
