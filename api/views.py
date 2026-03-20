@@ -1,5 +1,3 @@
-from django.http import Http404
-from django.template.context_processors import request
 from rest_framework import generics
 from rest_framework.exceptions import NotFound
 
