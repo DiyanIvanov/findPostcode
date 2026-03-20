@@ -7,3 +7,8 @@ from api.serializers import PostcodeSerializer
 class PostcodeViewSet(generics.ListAPIView):
     queryset = Postcode.objects.all()
     serializer_class = PostcodeSerializer
+
+
+class PostcodeView(generics.RetrieveAPIView):
+    
+    queryset = Postcode.objects.all()
