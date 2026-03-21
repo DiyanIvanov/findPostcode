@@ -31,7 +31,7 @@ class BatchPostcodeAPITestCase(APITestCase):
             "postcodes": ["B1 1AY", "Invalid"]
         }
 
-        response = self.client.post(self.url, data=data)
+        response = self.client.post(self.url, data=data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -50,6 +50,7 @@ class BatchPostcodeAPITestCase(APITestCase):
                 'error': 'Not found'
             }
         ]
+
         self.assertEqual(response.json(), expected_output)
 
     def test_get_requests_not_allowed(self):
