@@ -14,8 +14,8 @@ class PostcodeViewTest(APITestCase):
             postcode = "B1 1AY",
             district = "B1",
             area = "B",
-            easting = "406523",
-            northing = "286448",
+            eastings = "406523",
+            northings = "286448",
             latitude = "-1.9156917",
             longitude = "52.4759231"
         )
