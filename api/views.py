@@ -5,11 +5,6 @@ from rest_framework.response import Response
 from api.models import Postcode
 from api.serializers import PostcodeSerializer, BatchSerializer
 
-# Create your views here.
-class PostcodeViewSet(generics.ListAPIView):
-    queryset = Postcode.objects.all()
-    serializer_class = PostcodeSerializer
-
 
 class PostcodeView(generics.RetrieveAPIView):
     http_method_names = ['get']
