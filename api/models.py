@@ -5,8 +5,8 @@ class Postcode(models.Model):
     postcode = models.CharField(max_length=10, unique=True)
     area = models.CharField(max_length=10)
     district = models.CharField(max_length=10)
-    easting = models.CharField(max_length=10)
-    northing = models.CharField(max_length=10)
+    eastings = models.CharField(max_length=10)
+    northings = models.CharField(max_length=10)
     latitude = models.CharField(max_length=10)
     longitude = models.CharField(max_length=10)
 
