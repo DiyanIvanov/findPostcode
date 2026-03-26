@@ -10,19 +10,19 @@ class BatchPostcodeAPITestCase(APITestCase):
             postcode = 'B1 1AY',
             district = 'B1',
             area = 'B',
-            eastings = '406523',
-            northings = '286448',
-            latitude = '52.4759231',
-            longitude = '-1.9156917'
+            eastings = 406523,
+            northings = 286448,
+            latitude = 52.4759231,
+            longitude = -1.9156917
         )
         self.postcode_two = Postcode.objects.create(
             postcode='M1 1AE',
             district='M1',
             area='M',
-            eastings='384756',
-            northings='398553',
-            latitude='53.483487',
-            longitude='-2.231182'
+            eastings=384756,
+            northings=398553,
+            latitude=53.483487,
+            longitude=-2.231182
         )
         self.url = reverse('batch_endpoint')
 
@@ -40,10 +40,10 @@ class BatchPostcodeAPITestCase(APITestCase):
                 'postcode': 'B1 1AY',
                 'district': 'B1',
                 'area': 'B',
-                'eastings': '406523',
-                'northings': '286448',
-                'latitude': '52.4759231',
-                'longitude': '-1.9156917'
+                'eastings': 406523,
+                'northings': 286448,
+                'latitude': 52.4759231,
+                'longitude': -1.9156917
             },
             {
                 'postcode': 'INVALID',
