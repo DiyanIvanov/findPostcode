@@ -14,10 +14,10 @@ class PostcodeViewTest(APITestCase):
             postcode = "B1 1AY",
             district = "B1",
             area = "B",
-            eastings = "406523",
-            northings = "286448",
-            latitude = "-1.9156917",
-            longitude = "52.4759231"
+            eastings = 406523,
+            northings = 286448,
+            latitude = -1.9156917,
+            longitude = 52.4759231
         )
 
     def test_missing_postcode_test_returns_400(self):
