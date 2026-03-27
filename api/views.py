@@ -21,6 +21,7 @@ class PostcodeView(generics.RetrieveAPIView):
 
 
 class PostcodeBatchView(views.APIView):
+    http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
         serializer = BatchSerializer(data=request.data)
@@ -31,7 +32,6 @@ class PostcodeBatchView(views.APIView):
         results = []
 
         for postcode in postcodes:
-            # replace with your actual lookup logic
             obj = Postcode.objects.filter(postcode=postcode).first()
 
             if obj:
