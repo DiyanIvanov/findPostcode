@@ -1,7 +1,7 @@
 from rest_framework import generics, views, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated
 from api.models import Postcode
 from api.serializers import PostcodeSerializer, BatchSerializer
 
@@ -9,6 +9,7 @@ from api.serializers import PostcodeSerializer, BatchSerializer
 class PostcodeView(generics.RetrieveAPIView):
     http_method_names = ['get']
     serializer_class = PostcodeSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         postcode = self.kwargs['postcode']
@@ -22,6 +23,7 @@ class PostcodeView(generics.RetrieveAPIView):
 
 class PostcodeBatchView(views.APIView):
     http_method_names = ['post']
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         serializer = BatchSerializer(data=request.data)
