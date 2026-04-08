@@ -9,4 +9,9 @@ services:
       DEBUG: ${DEBUG}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       MAX_BATCH_POSTCODES: ${MAX_BATCH_POSTCODES}
-
+    healthcheck:
+      test: [ "CMD", "python", "manage.py", "check" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
