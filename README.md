@@ -130,7 +130,7 @@ Postcodes that cannot be resolved will include an `error` field instead of coord
 { "postcode": "XX1 1XX", "error": "Postcode not found" }
 ```
 
-Maximum **100 postcodes** per batch request.
+Maximum postcodes per batch is configurable via MAX_BATCH_POSTCODES in .env
 
 ---
 
