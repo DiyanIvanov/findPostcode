@@ -5,7 +5,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-       DEBUG: ${DEBUG}
-       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      MAX_BATCH_POSTCODES: ${MAX_BATCH_POSTCODES}
 
