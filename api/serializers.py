@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models import Postcode
+from decouple import config
 
 
 class PostcodeSerializer(serializers.ModelSerializer):
@@ -11,18 +12,10 @@ class PostcodeSerializer(serializers.ModelSerializer):
 class BatchSerializer(serializers.Serializer):
     postcodes = serializers.ListField(
         child=serializers.CharField(),
-        allow_empty=False
+        allow_empty=False,
+        min_length=1,
+        max_length=config('MAX_BATCH_POSTCODES', cast=int),
     )
 
     def validate_postcodes(self, value):
-        cleaned = []
-
-        for postcode in value:
-            postcode = postcode.strip().upper()
-
-            if not postcode:
-                raise serializers.ValidationError("Empty postcode not allowed")
-
-            cleaned.append(postcode)
-
-        return cleaned
+        return [postcode.upper() for postcode in value]
