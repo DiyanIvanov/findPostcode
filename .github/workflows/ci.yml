@@ -42,11 +42,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create .env
+        env:
+          DEBUG: ${{ secrets.DEBUG }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
         run: |
-          echo "DEBUG=${{ secrets.DEBUG }}" > .env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env
-          echo "MAX_BATCH_POSTCODES=${{ secrets.MAX_BATCH_POSTCODES }}" >> .env
+          cat > .env << EOF
+          DEBUG=$DEBUG
+          SECRET_KEY=$SECRET_KEY
+          ALLOWED_HOSTS=$ALLOWED_HOSTS
+          MAX_BATCH_POSTCODES=$MAX_BATCH_POSTCODES
+          EOF
 
       - name: Build and start services
         run: docker compose up -d --build
