@@ -19,6 +19,7 @@ jobs:
       DEBUG: ${{ secrets.DEBUG }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+      MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
 
     steps:
     - uses: actions/checkout@v4
