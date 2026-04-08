@@ -34,3 +34,40 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
+  
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        env:
+          DEBUG: ${{ secrets.DEBUG }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
+        run: |
+          cat > .env << EOF
+          DEBUG=$DEBUG
+          SECRET_KEY=$SECRET_KEY
+          ALLOWED_HOSTS=$ALLOWED_HOSTS
+          MAX_BATCH_POSTCODES=$MAX_BATCH_POSTCODES
+          EOF
+
+      - name: Build and start services
+        run: docker compose up -d --build
+
+      - name: Wait for api to be healthy
+        run: |
+          until docker compose ps api | grep -q "healthy"; do
+            echo "Waiting for api to be healthy..."
+            sleep 2
+          done
+
+      - name: Run tests
+        run: docker compose exec -T api python manage.py test
+
+      - name: Tear down
+        run: docker compose down
+
