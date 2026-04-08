@@ -4,6 +4,7 @@ from django.urls import reverse
 from api.models import Postcode
 from accounts.models import FindPostcodeUser
 from rest_framework.authtoken.models import Token
+from decouple import config
 
 
 class BatchPostcodeAPITestCase(APITestCase):
@@ -34,6 +35,15 @@ class BatchPostcodeAPITestCase(APITestCase):
 
         user = FindPostcodeUser.objects.get(username='test_user')
         self.token, _ = Token.objects.get_or_create(user=user)
+
+    def test_exceed_max_allowed_postcodes(self):
+        data = {
+            "postcode": ["B1 1AY"]*(config('MAX_BATCH_POSTCODES', cast=int)+1),
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        response = self.client.post(self.url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
     def test_batch_endpoint_with_both_valid_and_invalid_postcodes(self):
         data = {
