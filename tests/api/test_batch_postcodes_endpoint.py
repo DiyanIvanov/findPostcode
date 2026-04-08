@@ -44,6 +44,15 @@ class BatchPostcodeAPITestCase(APITestCase):
         response = self.client.post(self.url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_empty_entries_are_not_allowed(self):
+        data = {
+            "postcode": ["B1 1AY", ""],
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        response = self.client.post(self.url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
     def test_batch_endpoint_with_both_valid_and_invalid_postcodes(self):
         data = {
