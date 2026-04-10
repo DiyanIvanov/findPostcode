@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from rest_framework import permissions, status
+from rest_framework.generics import CreateAPIView
+from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
+from accounts.serializers import FindPostcodeUserSerializer
+from rest_framework.response import Response
 
-# Create your views here.
+
+UserModel = get_user_model()
+
+class UserCreate(CreateAPIView):
+
+    permission_classes = [permissions.AllowAny]
+    serializer_class = FindPostcodeUserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        headers = self.get_success_headers(serializer.data)
+        token, created = Token.objects.get_or_create(user=user)
+
+        return Response(
+            {
+                'token': token.key,
+                'user_id': user.id,
+                'username': user.username,
+            },
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )

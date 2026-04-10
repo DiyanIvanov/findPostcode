@@ -1,18 +1,19 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from accounts.managers import FindPostcodeUserManager
 
 
 class FindPostcodeUser(AbstractUser):
-    comms_preferences = models.BooleanField(default=False)
+    email = models.EmailField(max_length=255, unique=True)
+    date_joined = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}-({self.username})'
 
 
-class ApiKeys(models.Model):
-    project = models.CharField(max_length=100)
-    api_key_hash = models.CharField(max_length=64, unique=True, db_index=True)
-    owner = models.ForeignKey(
-        FindPostcodeUser,
-        on_delete=models.CASCADE
-    )
+    objects = FindPostcodeUserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
