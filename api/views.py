@@ -31,18 +31,15 @@ class PostcodeBatchView(views.APIView):
 
         postcodes = serializer.validated_data['postcodes']
 
-        results = []
+        queryset = Postcode.objects.filter(postcode__in=postcodes)
 
-        for postcode in postcodes:
-            obj = Postcode.objects.filter(postcode=postcode).first()
+        results_map = {obj.postcode: obj for obj in queryset}
+        result = [
+            PostcodeSerializer(results_map[postcode]).data
+            if postcode in results_map
+            else {"postcode": postcode, "error": "Not found"}
+            for postcode in postcodes
+        ]
 
-            if obj:
-                results.append(PostcodeSerializer(obj).data)
-            else:
-                results.append({
-                    "postcode": postcode,
-                    "error": "Not found"
-                })
 
-        return Response(results, status=status.HTTP_200_OK)
-
+        return Response(result, status=status.HTTP_200_OK)
