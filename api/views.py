@@ -7,6 +7,18 @@ from api.serializers import PostcodeSerializer, BatchSerializer
 
 
 class PostcodeView(generics.RetrieveAPIView):
+    """
+    Retrieve details for a single UK postcode.
+
+    Returns the following geographic data:
+    - Area and district information
+    - Latitude and longitude coordinates
+    - Eastings and northings (British National Grid)
+
+    Example: `/api/postcode/SW1A1AA/`
+
+    Requires authentication: `Authorization: Token <token_key>`
+    """
     http_method_names = ['get']
     serializer_class = PostcodeSerializer
     permission_classes = [IsAuthenticated]
@@ -22,6 +34,22 @@ class PostcodeView(generics.RetrieveAPIView):
 
 
 class PostcodeBatchView(views.APIView):
+    """
+    Retrieve details for multiple UK postcodes in a single request.
+
+    Accepts a POST request with a list of postcodes and returns geographic
+    data for each one. Invalid or unknown postcodes are returned with an
+    error message rather than failing the entire request.
+
+    Example request:
+    ```json
+    {
+        "postcodes": ["SW1A 1AA", "EC1A 1BB"]
+    }
+    ```
+
+    Requires authentication: `Authorization: Token <token_key>`
+    """
     http_method_names = ['post']
     permission_classes = [IsAuthenticated]
 

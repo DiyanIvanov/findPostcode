@@ -9,6 +9,13 @@ from rest_framework.response import Response
 UserModel = get_user_model()
 
 class UserCreate(CreateAPIView):
+    """
+    Register a new user.
+
+    Creates a new user account and returns an authentication token.
+    The token should be included in subsequent requests as:
+    `Authorization: Token <token_key>`
+    """
 
     permission_classes = [permissions.AllowAny]
     serializer_class = FindPostcodeUserSerializer
