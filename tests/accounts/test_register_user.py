@@ -1,7 +1,10 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 
+UserModel = get_user_model()
 
 class RegisterUserTestCase(APITestCase):
     def setUp(self):
@@ -12,6 +15,22 @@ class RegisterUserTestCase(APITestCase):
         self.last_name = "Doe"
 
         self.url = reverse('register')
+
+    def test_register_view_returns_correct_token(self):
+        data = {
+            "username": self.username,
+            "email": self.email,
+            "password": self.password,
+        }
+        response = self.client.post(self.url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertIn('token', response.data)
+
+        user = UserModel.objects.get(username=self.username)
+        token = Token.objects.get(user=user)
+        self.assertEqual(response.data['token'], token.key)
 
     def test_register_user_valid_data(self):
         data = {
