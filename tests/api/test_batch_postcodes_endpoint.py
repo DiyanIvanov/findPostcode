@@ -12,6 +12,7 @@ class BatchPostcodeAPITestCase(APITestCase):
         self.user = FindPostcodeUser.objects.create_user(
             username='test_user',
             password='testp@ssword123',
+            email='test_email@findpostcode.com',
         )
         self.postcode_one = Postcode.objects.create(
             postcode = 'B1 1AY',

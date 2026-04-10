@@ -24,6 +24,7 @@ class PostcodeViewTest(APITestCase):
         self.user = FindPostcodeUser.objects.create_user(
             username='test_user',
             password='testp@ssword123',
+            email='test_email@findpostcode.com',
         )
         user = FindPostcodeUser.objects.get(username='test_user')
         self.token, _ = Token.objects.get_or_create(user=user)
