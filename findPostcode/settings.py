@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_spectacular',
     'accounts',
-    'api'
+    'api',
 ]
 
 
@@ -54,6 +55,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 MIDDLEWARE = [
@@ -139,3 +141,11 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'FindPostcode API',
+    'DESCRIPTION': 'API documentation',
+    # 'VERSION': '0.3.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
