@@ -18,9 +18,16 @@ class Command(BaseCommand):
             required=True,
             help='Download URL for the ONSPD file from ONS portal'
         )
+        parser.add_argument(
+            '--file',
+            type=str,
+            required=True,
+            help='File path for the ONSPD file'
+        )
 
     def handle(self, *args, **options):
         url = options['url']
+        file = options['file']
 
         with tempfile.TemporaryDirectory(prefix='onspd_') as tmp_dir:
             zip_path = os.path.join(tmp_dir, 'data.zip')
@@ -31,9 +38,9 @@ class Command(BaseCommand):
 
             self.stdout.write('Extracting CSV...')
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                zip_ref.extract('Data/ONSPD_FEB_2026_UK.csv', tmp_dir)
+                zip_ref.extract(file, tmp_dir)
 
-            postcode_data = pd.read_csv(os.path.join(tmp_dir, 'Data/ONSPD_FEB_2026_UK.csv'))
+            postcode_data = pd.read_csv(os.path.join(tmp_dir, file))
             self.stdout.write(f'{postcode_data.shape}')
 
             update_db(postcode_data, self.stdout)
