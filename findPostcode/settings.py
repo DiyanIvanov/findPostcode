@@ -55,6 +55,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'api.throttles.DailyThrottleRate',
+        'api.throttles.PerMinuteThrottleRate',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'daily': config('DAILY_THROTTLE_RATE'),
+        'per-minute': config('PERMIN_THROTTLE_RATE'),
+    },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
