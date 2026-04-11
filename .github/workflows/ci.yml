@@ -47,6 +47,8 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
           MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
+          DAILY_THROTTLE_RATE: ${{ secrets.DAILY_THROTTLE_RATE }}
+          PERMIN_THROTTLE_RATE: ${{ secrets.PERMIN_THROTTLE_RATE }}
         run: |
           cat > .env << EOF
           DEBUG=$DEBUG
