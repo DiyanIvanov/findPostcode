@@ -31,7 +31,7 @@ The project includes a simple web interface where users can:
 All API requests must include a valid API key in the request header:
 
 ```
-Authorization: Api-Key <your-api-key>
+Authorization: Token <your-api-key>
 ```
 
 API keys are created through the web portal after registering for an account.
@@ -39,7 +39,7 @@ API keys are created through the web portal after registering for an account.
 **Example:**
 
 ```bash
-curl -H "Authorization: Api-Key abc123xyz..." \
+curl -H "Authorization: Token abc123xyz..." \
   https://your-domain.com/api/postcode/M1+1AE/
 ```
 
@@ -68,7 +68,7 @@ Returns the latitude and longitude for a given UK postcode.
 **Example Request**
 
 ```bash
-curl -H "Authorization: Api-Key abc123xyz..." \
+curl -H "Authorization: Token abc123xyz..." \
   https://your-domain.com/api/postcode/M1+1AE/
 ```
 
@@ -182,10 +182,22 @@ The API and web portal will be available at `http://localhost:8000`.
 ---
 
 ## Data Source
+Postcode data is sourced from the [ONS Postcode Directory](https://geoportal.statistics.gov.uk/search) (ONSPD), 
+an open dataset published in csv format quarterly by the Office for National Statistics.
 
-Postcode coordinates are sourced from the [ONS Postcode Directory](https://geoportal.statistics.gov.uk/) open dataset.
+The dataset includes active and terminated postcodes across the UK with coordinates, 
+dates and administrative geography.
 
 ---
+
+### Keeping data up to date
+To update the postcode database with the latest ONSPD data, run:
+
+```bash
+python manage.py update_postcode_db \
+    --url <onspd_download_url> \
+    --file Data/<file_name>.csv
+```
 
 ## Error Codes
 
