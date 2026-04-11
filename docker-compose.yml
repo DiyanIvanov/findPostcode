@@ -9,6 +9,8 @@ services:
       DEBUG: ${DEBUG}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       MAX_BATCH_POSTCODES: ${MAX_BATCH_POSTCODES}
+      DAILY_THROTTLE_RATE: ${DAILY_THROTTLE_RATE}
+      PERMIN_THROTTLE_RATE: ${PERMIN_THROTTLE_RATE}
     healthcheck:
       test: [ "CMD", "python", "manage.py", "check" ]
       interval: 10s

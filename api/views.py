@@ -2,8 +2,7 @@ from rest_framework import generics, views, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
-from api import serializers
+from api.throttles import DailyThrottleRate, PerMinuteThrottleRate
 from api.models import Postcode
 from api.serializers import PostcodeSerializer, BatchSerializer
 from drf_spectacular.utils import extend_schema
@@ -25,6 +24,7 @@ class PostcodeView(generics.RetrieveAPIView):
     http_method_names = ['get']
     serializer_class = PostcodeSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [DailyThrottleRate, PerMinuteThrottleRate]
 
     def get_object(self):
         postcode = self.kwargs['postcode']
@@ -55,6 +55,7 @@ class PostcodeBatchView(views.APIView):
     """
     http_method_names = ['post']
     permission_classes = [IsAuthenticated]
+    throttle_classes = [DailyThrottleRate, PerMinuteThrottleRate]
 
     @extend_schema(request=BatchSerializer)
     def post(self, request, *args, **kwargs):
