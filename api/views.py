@@ -2,8 +2,11 @@ from rest_framework import generics, views, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from api import serializers
 from api.models import Postcode
 from api.serializers import PostcodeSerializer, BatchSerializer
+from drf_spectacular.utils import extend_schema
 
 
 class PostcodeView(generics.RetrieveAPIView):
@@ -53,6 +56,7 @@ class PostcodeBatchView(views.APIView):
     http_method_names = ['post']
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(request=BatchSerializer)
     def post(self, request, *args, **kwargs):
         serializer = BatchSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
