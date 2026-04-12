@@ -162,6 +162,8 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 DATABASE_URL=sqlite:///db.sqlite3
 MAX_BATCH_POSTCODES=<max_number_of_postcodes_per_batch>
+DAILY_THROTTLE_RATE=<max_number_of_daily_request_per_user>
+PERMIN_THROTTLE_RATE=<max_number_of_request_per_minute>
 ```
 
 ### Database Setup
