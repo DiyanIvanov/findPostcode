@@ -22,6 +22,8 @@ jobs:
       MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
       DAILY_THROTTLE_RATE: ${{ secrets.DAILY_THROTTLE_RATE }}
       PERMIN_THROTTLE_RATE: ${{ secrets.PERMIN_THROTTLE_RATE }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+      CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
 
     steps:
     - uses: actions/checkout@v4
@@ -51,6 +53,8 @@ jobs:
           MAX_BATCH_POSTCODES: ${{ secrets.MAX_BATCH_POSTCODES }}
           DAILY_THROTTLE_RATE: ${{ secrets.DAILY_THROTTLE_RATE }}
           PERMIN_THROTTLE_RATE: ${{ secrets.PERMIN_THROTTLE_RATE }}
+          CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+          CELERY_RESULT_BACKEND: ${{ secrets.CELERY_RESULT_BACKEND }}
         run: |
           cat > .env << EOF
           DEBUG=$DEBUG
@@ -59,6 +63,8 @@ jobs:
           MAX_BATCH_POSTCODES=$MAX_BATCH_POSTCODES
           DAILY_THROTTLE_RATE=$DAILY_THROTTLE_RATE
           PERMIN_THROTTLE_RATE=$PERMIN_THROTTLE_RATE
+          CELERY_BROKER_URL=CELERY_BROKER_URL
+          CELERY_RESULT_BACKEND=CELERY_RESULT_BACKEND
           EOF
 
       - name: Build and start services
@@ -76,4 +82,3 @@ jobs:
 
       - name: Tear down
         run: docker compose down
-
