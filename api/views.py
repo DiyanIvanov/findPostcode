@@ -55,6 +55,7 @@ class PostcodeBatchView(views.APIView):
     """
     http_method_names = ['post']
     permission_classes = [IsAuthenticated]
+    serializer_class = BatchSerializer
     throttle_classes = [DailyThrottleRate, PerMinuteThrottleRate]
 
     @extend_schema(request=BatchSerializer)
