@@ -1,9 +1,12 @@
 services:
-  api:
+  redis:
+    image: redis:8.4.2-alpine3.22
+
+  celery:
     build: .
-    container_name: findPostcode
-    ports:
-      - "8000:8000"
+    container_name: celery
+    depends_on:
+      - redis
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DEBUG: ${DEBUG}
@@ -11,6 +14,29 @@ services:
       MAX_BATCH_POSTCODES: ${MAX_BATCH_POSTCODES}
       DAILY_THROTTLE_RATE: ${DAILY_THROTTLE_RATE}
       PERMIN_THROTTLE_RATE: ${PERMIN_THROTTLE_RATE}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    command: "celery -A findPostcode worker --loglevel=info -P solo"
+    restart: unless-stopped
+
+  api:
+    build: .
+    container_name: findPostcode
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - celery
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      MAX_BATCH_POSTCODES: ${MAX_BATCH_POSTCODES}
+      DAILY_THROTTLE_RATE: ${DAILY_THROTTLE_RATE}
+      PERMIN_THROTTLE_RATE: ${PERMIN_THROTTLE_RATE}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "python", "manage.py", "check" ]
       interval: 10s
