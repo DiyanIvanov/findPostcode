@@ -2,6 +2,8 @@ services:
   redis:
     container_name: redis
     image: redis:8.4.2-alpine3.22
+    volumes:
+      - 'redis_data:/data'
 
   minio:
     container_name: minio
@@ -60,3 +62,4 @@ services:
 
 volumes:
   minio_data:
+  redis_data:
