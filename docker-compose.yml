@@ -7,16 +7,39 @@ services:
 
   minio:
     container_name: minio
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z  # latest stable
     ports:
       - '9000:9000'
-      - '9001:9001'
+#      - '9001:9001'   # Uncomment for Web console
     volumes:
-      - 'minio_data:/data'
+      - minio_data:/data
     environment:
-      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
     command: server --console-address ":9001" /data
+    healthcheck:
+      test: [ "CMD", "mc", "ready", "local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # creates bucket automatically on startup
+  minio_init:
+    container_name: bucket-init
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set myminio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD};
+      mc mb --ignore-existing myminio/${MINIO_BUCKET_NAME};
+      mc anonymous set none myminio/${MINIO_BUCKET_NAME};
+      "
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
 
   celery:
     build: .
