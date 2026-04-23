@@ -2,10 +2,12 @@ from rest_framework import generics, views, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from api.tasks import create_csv
 from api.throttles import DailyThrottleRate, PerMinuteThrottleRate
 from api.models import Postcode
 from api.serializers import PostcodeSerializer, BatchSerializer
 from drf_spectacular.utils import extend_schema
+from celery.result import AsyncResult
 
 
 class PostcodeView(generics.RetrieveAPIView):
@@ -76,4 +78,25 @@ class PostcodeBatchView(views.APIView):
         ]
 
 
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class RequestCSV(views.APIView):
+    http_method_names = ['post']
+    permission_classes = [IsAuthenticated]
+    serializer_class = BatchSerializer
+    throttle_classes = [DailyThrottleRate, PerMinuteThrottleRate]
+
+    @extend_schema(request=BatchSerializer)
+    def post(self, request, *args, **kwargs):
+        serializer = BatchSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        postcodes = serializer.validated_data['postcodes']
+
+        task = create_csv.delay(postcodes)
+        result = {
+            "task_id": task.id,
+            "status": "submitted"
+        }
         return Response(result, status=status.HTTP_200_OK)
