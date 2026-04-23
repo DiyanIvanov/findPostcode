@@ -105,6 +105,7 @@ class RequestCSV(views.APIView):
 class CheckCsvStatus(views.APIView):
     http_method_names = ['get']
     permission_classes = [IsAuthenticated]
+    throttle_classes = [PerMinuteThrottleRate]
 
     def get(self, request, task_id):
         task = AsyncResult(task_id)
