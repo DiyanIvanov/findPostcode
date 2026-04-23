@@ -100,3 +100,16 @@ class RequestCSV(views.APIView):
             "status": "submitted"
         }
         return Response(result, status=status.HTTP_200_OK)
+
+
+class CheckCsvStatus(views.APIView):
+    http_method_names = ['get']
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, task_id):
+        task = AsyncResult(task_id)
+
+        return Response({
+            "task_id": task_id,
+            "status": task.status,
+        })
