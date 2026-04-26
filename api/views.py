@@ -1,3 +1,4 @@
+from django.core.files.storage import default_storage
 from rest_framework import generics, views, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -109,6 +110,11 @@ class CheckCsvStatus(views.APIView):
 
     def get(self, request, task_id):
         task = AsyncResult(task_id)
+
+        if task.state == 'SUCCESS':
+            filename = f'{task_id}.csv'
+            url = default_storage.url(filename)
+            return Response({'status': 'success', 'url': url}, status=status.HTTP_200_OK)
 
         return Response({
             "task_id": task_id,
