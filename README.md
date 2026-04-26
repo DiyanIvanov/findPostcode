@@ -158,12 +158,19 @@ Create a `.env` file in the project root:
 
 ```env
 SECRET_KEY=your-django-secret-key
-DEBUG=True
+DEBUG=False
 ALLOWED_HOSTS=localhost,127.0.0.1
 DATABASE_URL=sqlite:///db.sqlite3
 MAX_BATCH_POSTCODES=<max_number_of_postcodes_per_batch>
 DAILY_THROTTLE_RATE=<max_number_of_daily_request_per_user>
 PERMIN_THROTTLE_RATE=<max_number_of_request_per_minute>
+CELERY_BROKER_URL='redis://redis:6379/0'
+CELERY_RESULT_BACKEND='redis://redis:6379/0'
+MINIO_ACCESS_KEY=<your_admin_name>
+MINIO_SECRET_KEY=<your_admin_password>
+MINIO_BUCKET_NAME=<bucket_name>
+MINIO_ENDPOINT_URL='http://minio:9000'
+MINIO_CUSTOM_DOMAIN='localhost:9000'
 ```
 
 ### Database Setup
