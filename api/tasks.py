@@ -33,7 +33,7 @@ def create_csv(self, postcodes):
 
     buffer = io.StringIO()
     writer = csv.writer(buffer)
-    fields = [f.name for f in Postcode._meta.fields]
+    fields = [f.name for f in Postcode._meta.fields if f.name != 'id']
     writer.writerow(fields)
 
     result = Postcode.objects.filter(postcode__in=postcodes)
