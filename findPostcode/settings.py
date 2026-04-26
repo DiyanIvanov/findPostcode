@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
+    'storages',
     'accounts',
     'api',
 ]
@@ -164,3 +165,20 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
+
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    }
+}
+
+AWS_ACCESS_KEY_ID = config('MINIO_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = config('MINIO_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = config('MINIO_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = config('MINIO_ENDPOINT_URL')
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False
