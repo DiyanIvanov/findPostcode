@@ -134,6 +134,79 @@ Maximum postcodes per batch is configurable via MAX_BATCH_POSTCODES in .env
 
 ---
 
+## `POST /api/csv-export/`
+
+Request a CSV export for a list of UK postcodes. Queues an async export task and returns a `task_id` to poll for the result.
+
+**Request Body**
+
+```json
+{
+  "postcodes": ["SW1A 1AA", "EC1A 1BB"]
+}
+```
+
+**Success Response `200 OK`**
+
+```json
+{
+  "task_id": "f695a1e6-59ac-41ec-8020-30b14e085ef6",
+  "status": "submitted"
+}
+```
+
+Use the returned `task_id` to poll for export status at `GET /api/csv-status/<task_id>/`.
+
+**Error Response `400 Bad Request`**
+
+```json
+{
+  "postcodes": ["This field is required."]
+}
+```
+---
+
+## `GET /api/csv-status/<task_id>/`
+
+Check the status of a queued CSV export task.
+
+**URL Parameters**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `task_id` | string | ✅ Yes | The UUID returned from `POST /api/csv-export/` |
+
+**Example Request**
+
+```bash
+curl -H "Authorization: Token abc123xyz..." \
+  https://your-domain.com/api/csv-status/f695a1e6-59ac-41ec-8020-30b14e085ef6/
+```
+
+**Success Response `200 OK` — export complete**
+
+```json
+{
+  "status": "success",
+  "url": "https://your-storage.com/find-postcode-csv-requests/f695a1e6-59ac-41ec-8020-30b14e085ef6.csv"
+}
+```
+
+**Response `200 OK` — export in progress**
+
+```json
+{
+  "task_id": "f695a1e6-59ac-41ec-8020-30b14e085ef6",
+  "status": "PENDING"
+}
+```
+
+The `status` field reflects the underlying Celery task state (e.g. `PENDING`, `STARTED`, `FAILURE`). Keep polling until `status` is `"success"`.
+
+> **Note:** The `url` in the complete response is a presigned storage URL and may be time-limited depending on your storage backend configuration.
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -182,11 +255,25 @@ python manage.py createsuperuser  # optional: Django admin access
 
 ### Running Locally
 
+This project requires Redis, Celery, and MinIO — use Docker Compose to run all services together.
+
 ```bash
-python manage.py runserver
+docker compose up --build
 ```
 
-The API and web portal will be available at `http://localhost:8000`.
+The API will be available at `http://localhost:8000`.
+
+> **MinIO Web Console:** The console is available on port `9001` but disabled by default. To enable it, uncomment the `9001` port mapping under the `minio` service in `docker-compose.yml`.
+
+The following services will be started:
+
+| Service | Description |
+|---------|-------------|
+| `api` | Django REST API |
+| `celery` | Async worker for CSV export tasks |
+| `redis` | Message broker for Celery |
+| `minio` | S3-compatible object storage for CSV files |
+| `minio_init` | One-off container that creates the storage bucket on first run |
 
 ---
 
